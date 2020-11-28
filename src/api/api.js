@@ -1,4 +1,4 @@
-export const API_URL = "http://localhost:1234/items";
+export const API_URL = "https://thawing-lowlands-15577.herokuapp.com/items";
 
 export const getList = () =>
   fetch(`${API_URL}/`)

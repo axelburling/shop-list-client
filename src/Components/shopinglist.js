@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Table, FormCheck } from "react-bootstrap";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { Table, Spinner } from "react-bootstrap";
 import { BsTrash } from "react-icons/bs";
-import { getList, rmItem, UpdatedItem } from "../api/api";
+import { getList, rmItem } from "../api/api";
+import moment from "moment";
 
 const Shopinglist = () => {
   const [items, setItem] = useState([]);
-  const [isChecket, setIsChecket] = useState(false);
-  const match = useRouteMatch();
-  const history = useHistory();
 
   useEffect(() => {
     const fetchList = async () => {
@@ -20,7 +17,6 @@ const Shopinglist = () => {
 
   const deleteItem = async (id) => {
     await rmItem(id);
-    history.push("/");
   };
 
   return (
@@ -29,29 +25,33 @@ const Shopinglist = () => {
         <h3>Shopinglist</h3>
         <Table striped bordered hover>
           <thead>
-            <tr>
+            <tr className="tr">
               <th>Produkt</th>
               <th>Önskades</th>
               <th>Ta Bort</th>
             </tr>
           </thead>
           <tbody>
-            {items
-              ? items.map((item) => (
-                  <tr key={item._id}>
-                    <td>{item.name}</td>
-                    <td>{item.createdAt}</td>
-                    <td>
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => deleteItem(item._id)}
-                      >
-                        <BsTrash />
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              : "Loding...."}
+            {items && items.length > 0 ? (
+              items.map((item) => (
+                <tr key={item._id}>
+                  <td>{item.name}</td>
+                  <td>
+                    {moment(item.createdAt).format("YYYY-MM-DD HH:mm:ss")}
+                  </td>
+                  <td>
+                    <button
+                      className="btn btn-danger delbtn"
+                      onClick={() => deleteItem(item._id)}
+                    >
+                      <BsTrash className="delbtn" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <Spinner animation="border" role="status" />
+            )}
           </tbody>
         </Table>
       </div>
